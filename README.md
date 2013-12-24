@@ -1,4 +1,4 @@
 benfordslaw
 ===========
 
-Exploration of Benford's Law as it may or may not apply to web asset file sizes. 
+Exploration of Benford's Law as it applies to web asset file sizes. 
