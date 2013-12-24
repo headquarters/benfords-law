@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Web Assets &amp; Benford's Law</title>
+    <meta name="viewport" content="width=device-width">
+	<link href="css/normalize.css" rel="stylesheet">
+	<link href="css/grid.css" rel="stylesheet">
+	<link href="css/benfordslaw.css" rel="stylesheet">
+    <script src="js/html5shiv.js"></script>
+</head>
+	<body>
+        <div class="container">
+            <header class="row col">
+                <h1>Web Assets &amp; Benford's Law</h1>
+                <p id="abstract">
+					This preliminary research, with a small sample size of 100 websites, shows that web asset (HTML, CSS, JavaScript) file sizes appear to follow
+					Benford's Law to a certain degree. Trends show similar frequencies of leading digits in web assets to Benford's Law, but more research needs to be done
+					on a larger sample of sites and assets in order to draw a stronger conclusion. 
+                </p>
+            </header>
+            <article class="row col">
+                <h2>Background</h2>
+                <p>
+					I first discovered <a href="http://en.wikipedia.org/wiki/Benford's_law">Benford's Law</a> on an episode of <a href="http://www.radiolab.org/story/91699-from-benford-to-erdos/">Radio Lab</a>.
+					Simply put, Benford's Law states that in many data sets certain digits appear more often than others as the leading digit of the numbers in that set.
+					For example, a "1" appears as the first digit about 30% of the time in the numbers of some data sets, a "2" appears as the first digit about 17%
+					of the time, and so on. A graph of the trend is shown below.
+				</p>
+				<div id="benfords-law-chart" class="chart"></div>
+				<p>
+					After learning about Benford's Law, I wanted to research if web asset file sizes follow this law. Web assets are defined here as HTML documents,
+					external CSS files, external JavaScript files, and images. 					
+				</p>
+                <h2>Methodology</h2>
+                <p>
+					The following technologies were used:
+					<ul>
+						<li><a href="http://www.python.org/">Python</a></li>
+						<li><a href="http://requests.readthedocs.org/en/latest/">Requests</a>, a Python library for HTTP requests</li>
+						<li><a href="http://dataset.readthedocs.org/en/latest/index.html">Dataset</a>, a Python library for simple database interaction</li>
+						<li><a href="http://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup</a>, a Python library for reading and manipulating HTML and XML</li>
+						<li><a href="http://www.highcharts.com/">Highcharts JS</a>, a JavaScript library for displaying the charts in this document</li>
+					</ul>
+				</p>
+				<p>
+					I wrote a Python script to fetch the URLs of the top 100 sites from <a href="http://www.alexa.com/topsites">Alexa</a>.
+					These URLs were stored in a SQLite database	accessed via Dataset. I then wrote another Python script that fetched the documents and their external assets
+					for each of the top 100 sites and stored the size of each asset in the aforementioned SQLite database using Dataset. The asset sizes were stored in
+					bytes. 
+				</p>
+                <h2>Results</h2>
+                <p>
+					The following charts display the frequencies of leading digits in asset file sizes versus Benford's Law's expected frequncies.
+				</p>
+				<h3>HTML Document Sizes</h3>
+				<p>
+					The chart of HTML Document Sizes below represents 96 of the top 100 sites from Alexa's top sites list. Four of the top 100 returned byte sizes of 0, so those were not
+				included in the results. The URLs used were for home pages only. Despite the increase from 3 to 4, the overall trend follows the Benford's Law curve farely well.
+				</p>
+				<div id="benfords-law-with-doc-sizes-chart" class="chart"></div>
+				
+				<h3>Image Sizes</h3>
+				<p>
+					External image files were found in each HTML document using BeautifulSoup, then requested as individual HTTP requests using the Requests library.
+				The graph below consistutes 3443 image file sizes. Overall, the trend follows the Benford's Law curve, but something very strange happens with 4. Looking
+				at the data revealed a large number images with a file size of 43 bytes. Many of these files were GIF files that were probably tracking pixels. 
+				</p>
+				<div id="benfords-law-with-image-sizes-chart" class="chart"></div>
+				
+				<p>
+					Removing the files that were 43 bytes smoothed out the trend a little bit, but 4 still appears more than predicted.
+				</p>
+				<div id="benfords-law-with-image-sizes-corrected-chart" class="chart"></div>
+				
+				<h3>CSS Sizes</h3>
+				<p>
+					External CSS files and other <code>&lt;link&gt;</code> tags were found in each HTML document using BeautifulSoup, then requested as individual HTTP requests,
+					the same as with the images mentioned above. So, the results below include CSS files, favicon images, and any other asset that can be linked to
+					with a <code>&lt;link&gt;</code> tag. Here, 5 appears to be overrepresented, but from looking at the raw data it was not immediately clear what may be causing
+					the spike. 
+				</p>
+				<div id="benfords-law-with-link-sizes-chart" class="chart"></div>
+				
+				<h3>Script Sizes</h3>
+				<p>
+					External script files were found in each HTML document using BeautifulSoup, then requested as individual HTTP requests, the same as the images
+					and the CSS files mentioned above. The numbers 5 and 9 are slightly overrepresented here, but the overall curve follows the Benford's Law curve well. 
+				</p>
+				<div id="benfords-law-with-script-sizes-chart" class="chart"></div>
+				
+				<h3>All File Sizes</h3>
+				<p>
+					Looking at all file sizes together, 4 and 5 are overrepresented because they appear so often for image file sizes (lots of 4s) and for script and CSS file sizes
+					(lots of 5s). The overrepresentation by these numbers causes the frequencies of the other numbers to be lower, so the whole trend line is below
+					the Benford's Law curve. 
+				</p>
+				<div id="benfords-law-with-all-sizes-chart" class="chart"></div>
+                <h2>Conclusion</h2>
+                <p>
+					Despite some outliers, trends of leading digits in web asset file sizes appears to follow Benford's Law to a certain degree.
+				</p>
+				<h3>Limitations and Future Research</h3>
+				<p>
+					Considering the size of the web, 100 websites is a very small sample size to use when collecting data. Future research would benefit from using a much
+					larger sample size of sites. Also, guidelines should be created up front to consider how to handle outliers, such as transparent tracking pixels.  
+				</p>
+				<h2>Code and Data</h2>
+				<p>All the scripts used and the original database is available in a github repository.</p>
+            </article>
+            <footer class="row col">
+                &copy; 2013 Michael Head
+            </footer>
+        </div>
+		<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="//code.highcharts.com/highcharts.js"></script>
+		<script src="js/benfordslaw.js"></script>
+	</body>
+</htmL>

@@ -1,0 +1,23 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Georgia, serif;
+    font-weight:normal;
+}
+
+.container {
+    max-width:90em;
+    margin:0 auto;
+}
+
+.chart {
+    width:480px;
+    height:320px;
+}
+
+footer {
+    font-size:0.9em;
+    color:#333;
+}
